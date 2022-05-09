@@ -28,7 +28,7 @@ def insert_user_to_db(userObject):  # Function for inserting user's information 
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='1234')
         if connection.is_connected():
-            dump_tuple = (userObject.get_user_id(), userObject.get_carbon_emission(),
+            dump_tuple = (userObject.get_user_id(), userObject.find_carbon_emission(),
                           userObject.get_kwh_total(), userObject.get_kwh_electricity(),
                           userObject.get_kwh_gas(), userObject.get_location(),
                           userObject.get_householdType(), userObject.get_numberOfRooms(),
@@ -75,7 +75,7 @@ def get_user_from_db(userObject):  # Function for getting user's information fro
         print("Error while getting user from database", e)
 
 
-def get_carbon_emission(userObject):  # Function for getting user's carbon emission from database.
+def get_carbon_emission_from_db(userObject):  # Function for getting user's carbon emission from database.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='1234')
@@ -97,7 +97,24 @@ def get_carbon_emission(userObject):  # Function for getting user's carbon emiss
         return False
 
 
-def get_kwh_total(userObject):  # Function for getting user's total kwh from database.
+def update_carbon_emission(userObject):  # Function for setting user's carbon emission in database.
+    try:
+        connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
+                                             password='1234')
+        if connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute("UPDATE user_info SET carbon_emission = %s WHERE user_id = %s", (
+                userObject.get_carbon_emission(), userObject.get_user_id()))
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return True
+    except Error as e:
+        print("Error while setting carbon emission in database", e)
+        return False
+
+
+def get_kwh_total_from_db(userObject):  # Function for getting user's total kwh from database.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='1234')
@@ -118,6 +135,23 @@ def get_kwh_total(userObject):  # Function for getting user's total kwh from dat
         return False
 
 
+def update_kwh_total(userObject):  # Function for setting user's total kwh in database.
+    try:
+        connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
+                                             password='1234')
+        if connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute("UPDATE user_info SET kwh_total = %s WHERE user_id = %s", (
+                userObject.get_kwh_total(), userObject.get_user_id()))
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return True
+    except Error as e:
+        print("Error while setting kwh total in database", e)
+        return False
+
+
 def update_user_kwh_electricity(userObject):  # Function for updating user's electricity kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
@@ -135,7 +169,7 @@ def update_user_kwh_electricity(userObject):  # Function for updating user's ele
         return False
 
 
-def get_user_kwh_electricity(userObject):  # Function for getting user's electricity kwh.
+def get_user_kwh_electricity_from_db(userObject):  # Function for getting user's electricity kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='1234')
@@ -173,7 +207,7 @@ def update_user_kwh_gas(userObject):  # Function for updating user's gas kwh.
         return False
 
 
-def get_user_kwh_gas(userObject):  # Function for getting user's gas kwh.
+def get_user_kwh_gas_from_db(userObject):  # Function for getting user's gas kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='1234')
@@ -216,7 +250,7 @@ def update_user_heating_type(userObject):  # Function for updating user's heatin
         print("Error while updating user heating type", e)
 
 
-def get_user_heating_type(userObject):  # Function for getting user's heating type.
+def get_user_heating_type_from_db(userObject):  # Function for getting user's heating type.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
@@ -258,7 +292,7 @@ def update_user_room_number(userObject):  # Function for updating user's number 
         print("Error while updating user room number", e)
 
 
-def get_user_room_number(userObject):  # Function for getting user's number of rooms.
+def get_user_room_number_from_db(userObject):  # Function for getting user's number of rooms.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
@@ -300,7 +334,7 @@ def update_user_location(userObject):  # Function for updating user's location.
         print("Error while updating user location", e)
 
 
-def get_user_location(userObject):  # Function for getting user's location.
+def get_user_location_from_db(userObject):  # Function for getting user's location.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
@@ -342,7 +376,7 @@ def update_insulation(userObject):  # Function for updating user's insulation.
         print("Error while updating user insulation", e)
 
 
-def get_user_insulation(userObject):  # Function for getting user's insulation.
+def get_user_insulation_from_db(userObject):  # Function for getting user's insulation.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
@@ -384,7 +418,7 @@ def update_user_house_type(userObject):  # Function for updating user's house ty
         print("Error while updating user house type", e)
 
 
-def get_user_house_type(userObject):  # Function for getting user's house type.
+def get_user_house_type_from_db(userObject):  # Function for getting user's house type.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
