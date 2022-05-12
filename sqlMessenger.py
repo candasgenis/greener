@@ -259,9 +259,9 @@ def get_user_heating_type_from_db(userObject):  # Function for getting user's he
             cursor.execute("SELECT heating_type FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
             record = cursor.fetchone()
             if len(cursor.fetchall()) > 0:
-                return record[0]
                 cursor.close()
                 connection.close()
+                return record[0]
             else:
                 cursor.close()
                 connection.close()
