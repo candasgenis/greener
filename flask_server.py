@@ -181,6 +181,71 @@ def set_house_type_flask():
     else:
         return jsonify({'status': 'failure'})
 
+@app.route('/get_number_of_rooms', methods=['GET'])
+def get_number_of_rooms_flask():
+    user_id = request.form['user_id']
+    user_object = User(user_id)
+    user_object.set_numberOfRooms(sqlMessenger.get_user_room_number_from_db(userObject=user_object))
+    if user_object.get_numberOfRooms():
+        return jsonify({'status': 'success', 'number_of_rooms': user_object.get_numberOfRooms()})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/set_number_of_rooms', methods=['POST'])
+def set_number_of_rooms_flask():
+    user_id = request.form['user_id']
+    number_of_rooms = request.form['number_of_rooms']
+    user_object = User(user_id)
+    user_object.set_numberOfRooms(number_of_rooms)
+    if sqlMessenger.update_user_room_number(user_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/get_heating_type', methods=['GET'])
+def get_heating_type_flask():
+    user_id = request.form['user_id']
+    user_object = User(user_id)
+    user_object.set_heatingType(sqlMessenger.get_user_heating_type_from_db(userObject=user_object))
+    if user_object.get_heatingType():
+        return jsonify({'status': 'success', 'heating_type': user_object.get_heatingType()})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/set_heating_type', methods=['POST'])
+def set_heating_type_flask():
+    user_id = request.form['user_id']
+    heating_type = request.form['heating_type']
+    user_object = User(user_id)
+    user_object.set_heatingType(heating_type)
+    if sqlMessenger.update_user_heating_type(user_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/get_insulation', methods=['GET'])
+def get_insulation_flask():
+    user_id = request.form['user_id']
+    user_object = User(user_id)
+    user_object.set_insulation(sqlMessenger.get_user_insulation_from_db(userObject=user_object))
+    if user_object.get_insulation():
+        return jsonify({'status': 'success', 'insulation': user_object.get_insulation()})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/set_insulation', methods=['POST'])
+def set_insulation_flask():
+    user_id = request.form['user_id']
+    insulation = request.form['insulation']
+    user_object = User(user_id)
+    user_object.set_insulation(insulation)
+    if sqlMessenger.update_insulation(user_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+
+
 
 
 
