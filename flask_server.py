@@ -158,10 +158,12 @@ def set_location_flask():
 @app.route('/set_kwh_electricity', methods=['POST'])
 def set_kwh_electricity_flask():
     user_id = request.form['user_id']
+    home_id = request.form['home_id']
     kwh_electricity = request.form['kwh_electricity']
-    user_object = User(user_id)
-    user_object.set_kwh_electricity_total(kwh_electricity)
-    if sqlMessenger.update_user_kwh_electricity(user_object):
+    user_object = User(user_id=user_id)
+    home_object = household(home_id=home_id)
+    home_object.set_kwh_electricity(kwh_electricity)
+    if sqlMessenger.update_home_kwh_electricity(user_object):
         return jsonify({'status': 'success'})
     else:
         return jsonify({'status': 'failure'})
