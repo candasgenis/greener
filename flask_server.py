@@ -22,17 +22,13 @@ def set_user_info():
     insulation = request.form['insulation']
 
     user_object = User(user_id)
-    user_object.set_kwh_electricity(kwh_electricity)
-    user_object.set_kwh_gas(kwh_gas)
+    user_object.set_kwh_electricity_total(kwh_electricity)
+    user_object.set_kwh_gas_total(kwh_gas)
     user_object.set_location(location)
-    user_object.set_householdType(house_type)
-    user_object.set_numberOfRooms(number_of_rooms)
-    user_object.set_heatingType(heating_type)
-    user_object.set_insulation(insulation)
-    user_object.set_kwh_total(int(user_object.get_kwh_electricity()) + int(user_object.get_kwh_gas()))
+    user_object.set_kwh_total(int(user_object.get_kwh_electricity_total()) + int(user_object.get_kwh_gas_total()))
 
-    calculation_object = calculations.calculation(kwh_electricity=user_object.get_kwh_electricity(),
-                                                  kwh_gas=user_object.get_kwh_gas())
+    calculation_object = calculations.calculation(kwh_electricity=user_object.get_kwh_electricity_total(),
+                                                  kwh_gas=user_object.get_kwh_gas_total())
 
     user_object.set_carbon_emission(calculation_object.calculate_co2_overall())
 
