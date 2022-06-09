@@ -36,7 +36,7 @@ def insert_user_to_db(userObject):  # Function for inserting user's information 
             try:
                 cursor.execute("INSERT INTO user_info"
                                "(user_id, carbon_emission, kwh_total, electricity_kwh_total, gas_kwh_total, location) "
-                               "VALUES(%s, %s, %s, %s, %s, %s)", dump_tuple)
+                               "VALUES(%s, %s, %s, %s, %s, %s, %s ,%s, %s, %s)", dump_tuple)
 
                 connection.commit()
                 cursor.close()
@@ -101,7 +101,7 @@ def update_carbon_emission(userObject):  # Function for setting user's carbon em
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE user_info SET carbon_emission = %s WHERE user_id = %s", (
-                userObject.get_carbon_emission(), userObject.get_user_id(),))
+                userObject.get_carbon_emission(), userObject.get_user_id()))
             connection.commit()
             cursor.close()
             connection.close()
@@ -128,7 +128,7 @@ def get_house_belong_to_user(user_id):
         print("Error while getting house belong to user", e)
         return False
 
-    
+
 
 def get_kwh_total_from_db(user_id):  # Function for getting user's total kwh from database.
     try:
@@ -167,7 +167,6 @@ def update_kwh_total(userObject):  # Function for setting user's total kwh in da
         print("Error while setting kwh total in database", e)
         return False
 
-
 def update_user_kwh_electricity(userObject):  # Function for updating user's electricity kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
@@ -184,6 +183,22 @@ def update_user_kwh_electricity(userObject):  # Function for updating user's ele
         print("Error while updating user's electricity kwh", e)
         return False
 
+def update_home_kwh_electricity(homeObject):  # Function for updating user's electricity kwh.
+    try:
+        connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
+                                             password='1234')
+        if connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute("UPDATE home SET kwh_electricity = %s WHERE home_id = %s",
+                           (homeObject.get_kwh_electricity(), homeObject.get_home_id()))
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return True
+    except Error as e:
+        print("Error while updating user's electricity kwh", e)
+        return False
+
 
 def get_user_kwh_electricity_from_db(userObject):  # Function for getting user's electricity kwh.
     try:
@@ -191,7 +206,7 @@ def get_user_kwh_electricity_from_db(userObject):  # Function for getting user's
                                              password='1234')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("SELECT kwh_electricity_total FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
+            cursor.execute("SELECT kwh_electricity FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
             record = cursor.fetchone()
             if record is not None:
                 cursor.close()
