@@ -114,13 +114,32 @@ def update_carbon_emission(userObject):  # Function for setting user's carbon em
         return False
 
 
-def get_kwh_total_from_db(userObject):  # Function for getting user's total kwh from database.
+def get_house_belong_to_user(user_id):
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='1234')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("SELECT kwh_total FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
+            cursor.execute("SELECT home_id FROM user_home WHERE user_id = %s", (user_id,))
+            record = cursor.fetchAll()
+            if(len(record) > 0):
+                return record
+            else:
+                return False
+
+    except Error as e:
+        print("Error while getting house belong to user", e)
+        return False
+
+    
+
+def get_kwh_total_from_db(user_id):  # Function for getting user's total kwh from database.
+    try:
+        connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
+                                             password='1234')
+        if connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute("SELECT kwh_total FROM user_info WHERE user_id = %s", (user_id,))
             record = cursor.fetchone()
             if record is not None:
                 cursor.close()
@@ -158,8 +177,8 @@ def update_user_kwh_electricity(userObject):  # Function for updating user's ele
                                              password='1234')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("UPDATE user_info SET kwh_electricity = %s WHERE user_id = %s",
-                           (userObject.get_kwh_electricity(), userObject.get_user_id()))
+            cursor.execute("UPDATE user_info SET kwh_electricity_total = %s WHERE user_id = %s",
+                           (userObject.get_kwh_electricity_total(), userObject.get_user_id()))
             connection.commit()
             cursor.close()
             connection.close()
@@ -196,8 +215,8 @@ def update_user_kwh_gas(userObject):  # Function for updating user's gas kwh.
                                              password='1234')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("UPDATE user_info SET kwh_gas = %s WHERE user_id = %s",
-                           (userObject.get_kwh_gas(), userObject.get_user_id()))
+            cursor.execute("UPDATE user_info SET kwh_gas_total = %s WHERE user_id = %s",
+                           (userObject.get_kwh_gas_total(), userObject.get_user_id()))
             connection.commit()
             cursor.close()
             connection.close()
@@ -228,14 +247,14 @@ def get_user_kwh_gas_from_db(userObject):  # Function for getting user's gas kwh
         return False
 
 
-def update_user_heating_type(userObject):  # Function for updating user's heating type.
+def update_house_heating_type(home_id, heating_type):  # Function for updating user's heating type.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("UPDATE user_info SET heating_type = %s WHERE user_id = %s",
-                           (userObject.get_heatingType(), userObject.get_user_id(),))
+            cursor.execute("UPDATE house SET heating_type = %s WHERE home_id = %s",
+                           (heating_type, home_id,))
             connection.commit()
 
             if len(cursor.fetchall()) > 0:
@@ -250,13 +269,13 @@ def update_user_heating_type(userObject):  # Function for updating user's heatin
         print("Error while updating user heating type", e)
 
 
-def get_user_heating_type_from_db(userObject):  # Function for getting user's heating type.
+def get_user_heating_type_from_db(houseObject):  # Function for getting user's heating type.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("SELECT heating_type FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
+            cursor.execute("SELECT heating_type FROM home WHERE home_id = %s", (houseObject.get_house_id(),))
             record = cursor.fetchone()
             if len(cursor.fetchall()) > 0:
                 cursor.close()
@@ -270,14 +289,14 @@ def get_user_heating_type_from_db(userObject):  # Function for getting user's he
         print("Error while getting user heating type", e)
 
 
-def update_user_room_number(userObject):  # Function for updating user's number of rooms.
+def update_user_room_number(houseObject):  # Function for updating user's number of rooms.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("UPDATE user_info SET number_of_rooms = %s WHERE user_id = %s",
-                           (userObject.get_numberOfRooms(), userObject.get_user_id(),))
+            cursor.execute("UPDATE home SET number_of_rooms = %s WHERE home_id = %s",
+                           (houseObject.get_number_of_rooms(), houseObject.get_home_id(),))
             connection.commit()
 
             if len(cursor.fetchall()) > 0:
@@ -292,7 +311,7 @@ def update_user_room_number(userObject):  # Function for updating user's number 
         print("Error while updating user room number", e)
 
 
-def get_user_room_number_from_db(userObject):  # Function for getting user's number of rooms.
+def get_house_room_number_from_db(houseObject):  # Function for getting user's number of rooms.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
@@ -354,14 +373,14 @@ def get_user_location_from_db(userObject):  # Function for getting user's locati
         print("Error while getting user location", e)
 
 
-def update_insulation(userObject):  # Function for updating user's insulation.
+def update_insulation(houseObject):  # Function for updating user's insulation.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("UPDATE user_info SET insulation = %s WHERE user_id = %s",
-                           (userObject.get_insulation(), userObject.get_user_id(),))
+            cursor.execute("UPDATE house SET insulation = %s WHERE house_id= %s",
+                           (houseObject.get_insulation(), houseObject.get_home_id(),))
             connection.commit()
 
             if len(cursor.fetchall()) > 0:
@@ -376,13 +395,13 @@ def update_insulation(userObject):  # Function for updating user's insulation.
         print("Error while updating user insulation", e)
 
 
-def get_user_insulation_from_db(userObject):  # Function for getting user's insulation.
+def get_home_insulation_from_db(homeObject):  # Function for getting user's insulation.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("SELECT insulation FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
+            cursor.execute("SELECT insulation FROM home WHERE house_id = %s", (homeObject.get_home_id(),))
             record = cursor.fetchone()
             if len(cursor.fetchall()) > 0:
                 cursor.close()
@@ -396,14 +415,14 @@ def get_user_insulation_from_db(userObject):  # Function for getting user's insu
         print("Error while getting user insulation", e)
 
 
-def update_user_house_type(userObject):  # Function for updating user's house type.
+def update_house_type(house_id, house_type):  # Function for updating user's house type.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='##yourpassword##')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("UPDATE user_info SET house_type = %s WHERE user_id = %s",
-                           (userObject.get_houseType(), userObject.get_user_id(),))
+            cursor.execute("UPDATE house SET house_type = %s WHERE house_id = %s",
+                           (house_type, house_id,))
             connection.commit()
 
             if len(cursor.fetchall()) > 0:
@@ -415,7 +434,7 @@ def update_user_house_type(userObject):  # Function for updating user's house ty
                 connection.close()
                 return False
     except Error as e:
-        print("Error while updating user house type", e)
+        print("Error while updating house type", e)
 
 
 def get_user_house_type_from_db(userObject):  # Function for getting user's house type.
