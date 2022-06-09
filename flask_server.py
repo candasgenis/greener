@@ -153,6 +153,16 @@ def set_location_flask():
     else:
         return jsonify({'status': 'failure'})
 
+@app.route('get_user_homes', methods=['GET'])
+def get_user_homes_flask():
+    user_id = request.form['user_id']
+    user_object = User(user_id)
+    user_object.set_homes(sqlMessenger.get_user_homes_from_db(userObject=user_object))
+    if user_object.get_homes():
+        return jsonify({'status': 'success', 'homes': user_object.get_homes()})
+    else:
+        return jsonify({'status': 'failure'})
+
  #########################################################################
 
 @app.route('/set_kwh_electricity', methods=['POST'])

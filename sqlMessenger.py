@@ -258,6 +258,25 @@ def get_user_kwh_gas_from_db(userObject):  # Function for getting user's gas kwh
         print("Error while getting user's gas kwh", e)
         return False
 
+def get_user_homes_from_db(userObject):
+    try:
+        connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
+                                             password='1234')
+        if connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute("SELECT home_id FROM user_home WHERE user_id = %s", (userObject.get_user_id(),))
+            record = cursor.fetchall()
+            if record is not None:
+                cursor.close()
+                connection.close()
+                return record
+            else:
+                cursor.close()
+                connection.close()
+                return False
+    except Error as e:
+        print("Error while getting user's gas kwh", e)
+        return False
 
 def update_house_heating_type(home_id, heating_type):  # Function for updating user's heating type.
     try:
