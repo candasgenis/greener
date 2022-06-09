@@ -79,7 +79,7 @@ def get_kwh_total_flask():
         return jsonify({'status': 'failure'})
 
 @app.route('/set_kwh_total', methods=['POST'])
-def set_kwh_total_flask():
+def set_kwh_total_user_flask():
     user_id = request.form['user_id']
     kwh_electricity = request.form['kwh_electricity']
     kwh_gas = request.form['kwh_gas']
@@ -91,7 +91,7 @@ def set_kwh_total_flask():
         return jsonify({'status': 'failure'})
 
 @app.route('/get_kwh_electricity_total', methods=['GET'])
-def get_kwh_electricity_flask():
+def get_kwh_electricity_total_flask():
     user_id = request.form['user_id']
     user_object = User(user_id)
     user_object.set_kwh_electricity_total(sqlMessenger.get_user_kwh_electricity_from_db(userObject=user_object))
@@ -101,7 +101,7 @@ def get_kwh_electricity_flask():
         return jsonify({'status': 'failure'})
 
 @app.route('/set_kwh_electricity_total', methods=['POST'])
-def set_kwh_electricity_flask():
+def set_kwh_electricity_total_flask():
     user_id = request.form['user_id']
     kwh_electricity = request.form['kwh_electricity_total']
     user_object = User(user_id)
@@ -112,7 +112,7 @@ def set_kwh_electricity_flask():
         return jsonify({'status': 'failure'})
 
 @app.route('/set_kwh_gas_total', methods=['POST'])
-def set_kwh_gas_flask():
+def set_kwh_gas_total_flask():
     user_id = request.form['user_id']
     kwh_gas = request.form['kwh_gas']
     user_object = User(user_id)
@@ -123,7 +123,7 @@ def set_kwh_gas_flask():
         return jsonify({'status': 'failure'})
 
 @app.route('/get_kwh_gas_total', methods=['GET'])
-def get_kwh_gas_flask():
+def get_kwh_gas_total_flask():
     user_id = request.form['user_id']
     user_object = User(user_id)
     user_object.set_kwh_gas_total(sqlMessenger.get_user_kwh_gas_from_db(userObject=user_object))
@@ -165,6 +165,7 @@ def get_user_homes_flask():
 
  #########################################################################
 
+# Home Setters
 @app.route('/set_kwh_electricity', methods=['POST'])
 def set_kwh_electricity_flask():
     home_id = request.form['home_id']
@@ -187,7 +188,134 @@ def set_kwh_gas_flask():
     else:
         return jsonify({'status': 'failure'})
 
+@app.route('/set_kwh_total', methods=['POST'])
+def set_kwh_total_flask():
+    home_id = request.form['home_id']
+    kwh_electricity = request.form['kwh_electricity']
+    kwh_gas = request.form['kwh_gas']
+    home_object = household(home_id=home_id)
+    home_object.set_kwh_total(float(kwh_electricity) + float(kwh_gas))
+    if sqlMessenger.update_home_kwh_total(homeObject=home_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/set_house_type', methods=['POST'])
+def set_house_type_flask():
+    home_id = request.form['home_id']
+    house_type = request.form['house_type']
+    home_object = household(home_id=home_id)
+    home_object.set_house_type(house_type)
+    if sqlMessenger.update_home_house_type(homeObject=home_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('set_number_of_rooms', methods=['POST'])
+def set_number_of_rooms_flask():
+    home_id = request.form['home_id']
+    number_of_rooms = request.form['number_of_rooms']
+    home_object = household(home_id=home_id)
+    home_object.set_number_of_rooms(number_of_rooms)
+    if sqlMessenger.update_home_number_of_rooms(homeObject=home_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/set_heating_type', methods=['POST'])
+def set_heating_type_flask():
+    home_id = request.form['home_id']
+    heating_type = request.form['heating_type']
+    home_object = household(home_id=home_id)
+    home_object.set_heating_type(heating_type)
+    if sqlMessenger.update_home_heating_type(homeObject=home_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/set_insulation', methods=['POST'])
+def set_insulation_flask():
+    home_id = request.form['home_id']
+    insulation = request.form['insulation']
+    home_object = household(home_id=home_id)
+    home_object.set_insulation(insulation)
+    if sqlMessenger.update_home_insulation(homeObject=home_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+# Home Getters
+@app.route('/get_kwh_electricity', methods=['GET'])
+def get_kwh_electricity_flask():
+    home_id = request.form['home_id']
+    home_object = household(home_id=home_id)
+    home_object.set_kwh_electricity(sqlMessenger.get_home_kwh_electricity_from_db(homeObject=home_object))
+    if home_object.get_kwh_electricity():
+        return jsonify({'status': 'success', 'kwh_electricity': home_object.get_kwh_electricity()})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/get_kwh_gas', methods=['GET'])
+def get_kwh_gas_flask():
+    home_id = request.form['home_id']
+    home_object = household(home_id=home_id)
+    home_object.set_kwh_gas(sqlMessenger.get_home_kwh_gas_from_db(homeObject=home_object))
+    if home_object.get_kwh_gas():
+        return jsonify({'status': 'success', 'kwh_gas': home_object.get_kwh_gas()})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/get_kwh_total', methods=['GET'])
+def get_kwh_total_flask():
+    home_id = request.form['home_id']
+    home_object = household(home_id=home_id)
+    home_object.set_kwh_total(sqlMessenger.get_home_kwh_total_from_db(homeObject=home_object))
+    if home_object.get_kwh_total():
+        return jsonify({'status': 'success', 'kwh_total': home_object.get_kwh_total()})
+    else:
+        return jsonify({'status': 'failure'})
+
 @app.route('/get_house_type', methods=['GET'])
+def get_house_type_flask():
+    home_id = request.form['home_id']
+    home_object = household(home_id=home_id)
+    home_object.set_house_type(sqlMessenger.get_home_house_type_from_db(homeObject=home_object))
+    if home_object.get_house_type():
+        return jsonify({'status': 'success', 'house_type': home_object.get_house_type()})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/get_number_of_rooms', methods=['GET'])
+def get_number_of_rooms_flask():
+    home_id = request.form['home_id']
+    home_object = household(home_id=home_id)
+    home_object.set_number_of_rooms(sqlMessenger.get_home_number_of_rooms_from_db(homeObject=home_object))
+    if home_object.get_number_of_rooms():
+        return jsonify({'status': 'success', 'number_of_rooms': home_object.get_number_of_rooms()})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/get_heating_type', methods=['GET'])
+def get_heating_type_flask():
+    home_id = request.form['home_id']
+    home_object = household(home_id=home_id)
+    home_object.set_heating_type(sqlMessenger.get_home_heating_type_from_db(homeObject=home_object))
+    if home_object.get_heating_type():
+        return jsonify({'status': 'success', 'heating_type': home_object.get_heating_type()})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/get_insulation', methods=['GET'])
+def get_insulation_flask():
+    home_id = request.form['home_id']
+    home_object = household(home_id=home_id)
+    home_object.set_insulation(sqlMessenger.get_home_insulation_from_db(homeObject=home_object))
+    if home_object.get_insulation():
+        return jsonify({'status': 'success', 'insulation': home_object.get_insulation()})
+    else:
+        return jsonify({'status': 'failure'})
+
+"""@app.route('/get_house_type', methods=['GET'])
 def get_house_type_flask():
     user_id = request.form['user_id']
     user_object = User(user_id)
@@ -195,18 +323,18 @@ def get_house_type_flask():
     if user_object.get_householdType():
         return jsonify({'status': 'success', 'house_type': user_object.get_householdType()})
     else:
-        return jsonify({'status': 'failure'})
+        return jsonify({'status': 'failure'})"""
 
-@app.route('/set_house_type', methods=['POST'])
+"""@app.route('/set_house_type', methods=['POST'])
 def set_house_type_flask():
     house_id = request.form['house_id']
     house_type = request.form['house_type']
     if sqlMessenger.update_house_type(house_id=house_id, house_type=house_type):
         return jsonify({'status': 'success'})
     else:
-        return jsonify({'status': 'failure'})
+        return jsonify({'status': 'failure'})"""
 
-@app.route('/get_number_of_rooms', methods=['GET'])
+"""@app.route('/get_number_of_rooms', methods=['GET'])
 def get_number_of_rooms_flask():
     user_id = request.form['user_id']
     household_object = User(user_id)
@@ -214,9 +342,9 @@ def get_number_of_rooms_flask():
     if household_object.get_numberOfRooms():
         return jsonify({'status': 'success', 'number_of_rooms': household_object.get_numberOfRooms()})
     else:
-        return jsonify({'status': 'failure'})
+        return jsonify({'status': 'failure'})"""
 
-@app.route('/set_number_of_rooms', methods=['POST'])
+"""@app.route('/set_number_of_rooms', methods=['POST'])
 def set_number_of_rooms_flask():
     house_id = request.form['house_id']
     number_of_rooms = request.form['number_of_rooms']
@@ -267,7 +395,7 @@ def set_insulation_flask():
     if sqlMessenger.update_insulation(house_object):
         return jsonify({'status': 'success'})
     else:
-        return jsonify({'status': 'failure'})
+        return jsonify({'status': 'failure'})"""
 
 
 
