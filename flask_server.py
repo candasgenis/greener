@@ -167,25 +167,22 @@ def get_user_homes_flask():
 
 @app.route('/set_kwh_electricity', methods=['POST'])
 def set_kwh_electricity_flask():
-    user_id = request.form['user_id']
     home_id = request.form['home_id']
     kwh_electricity = request.form['kwh_electricity']
-    user_object = User(user_id=user_id)
     home_object = household(home_id=home_id)
     home_object.set_kwh_electricity(kwh_electricity)
-    if sqlMessenger.update_home_kwh_electricity(user_object):
+    if sqlMessenger.update_home_kwh_electricity(homeObject=home_object):
         return jsonify({'status': 'success'})
     else:
         return jsonify({'status': 'failure'})
 
-
-@app.route('/set_kwh_gas', methods=['POST'])
+@app.route('set_kwh_gas', methods=['POST'])
 def set_kwh_gas_flask():
-    user_id = request.form['user_id']
+    home_id = request.form['home_id']
     kwh_gas = request.form['kwh_gas']
-    user_object = User(user_id)
-    user_object.set_kwh_gas(kwh_gas)
-    if sqlMessenger.update_user_kwh_gas(user_object):
+    home_object = household(home_id=home_id)
+    home_object.set_kwh_gas(kwh_gas)
+    if sqlMessenger.update_home_kwh_gas(homeObject=home_object):
         return jsonify({'status': 'success'})
     else:
         return jsonify({'status': 'failure'})

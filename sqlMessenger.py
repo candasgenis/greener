@@ -199,6 +199,22 @@ def update_home_kwh_electricity(homeObject):  # Function for updating user's ele
         print("Error while updating user's electricity kwh", e)
         return False
 
+def update_home_kwh_gas(homeObject):  # Function for updating home's gas kwh.
+    try:
+        connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
+                                             password='1234')
+        if connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute("UPDATE home SET kwh_gas = %s WHERE home_id = %s",
+                           (homeObject.get_kwh_gas(), homeObject.get_home_id()))
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return True
+    except Error as e:
+        print("Error while updating home's gas kwh", e)
+        return False
+
 
 def get_user_kwh_electricity_from_db(userObject):  # Function for getting user's electricity kwh.
     try:
@@ -236,6 +252,8 @@ def update_user_kwh_gas(userObject):  # Function for updating user's gas kwh.
     except Error as e:
         print("Error while updating user's gas kwh", e)
         return False
+
+
 
 
 def get_user_kwh_gas_from_db(userObject):  # Function for getting user's gas kwh.
