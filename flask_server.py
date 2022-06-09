@@ -13,17 +13,13 @@ app = Flask(__name__)
 @app.route('/set_user_info', methods=['POST'])
 def set_user_info():
     user_id = request.form['user_id']
-    kwh_electricity = request.form['kwh_electricity']
-    kwh_gas = request.form['kwh_gas']
+    kwh_electricity_total = request.form['kwh_electricity_total']
+    kwh_gas_total = request.form['kwh_gas_total']
     location = request.form['location']
-    house_type = request.form['house_type']
-    number_of_rooms = request.form['number_of_rooms']
-    heating_type = request.form['heating_type']
-    insulation = request.form['insulation']
 
     user_object = User(user_id)
-    user_object.set_kwh_electricity_total(kwh_electricity)
-    user_object.set_kwh_gas_total(kwh_gas)
+    user_object.set_kwh_electricity_total(kwh_electricity_total)
+    user_object.set_kwh_gas_total(kwh_gas_total)
     user_object.set_location(location)
     user_object.set_kwh_total(int(user_object.get_kwh_electricity_total()) + int(user_object.get_kwh_gas_total()))
 
@@ -94,20 +90,20 @@ def set_kwh_total_flask():
     else:
         return jsonify({'status': 'failure'})
 
-@app.route('/get_kwh_electricity', methods=['GET'])
+@app.route('/get_kwh_electricity_total', methods=['GET'])
 def get_kwh_electricity_flask():
     user_id = request.form['user_id']
     user_object = User(user_id)
-    user_object.set_kwh_electricity(sqlMessenger.get_user_kwh_electricity_from_db(userObject=user_object))
-    if user_object.get_kwh_electricity():
-        return jsonify({'status': 'success', 'kwh_electricity': user_object.get_kwh_electricity()})
+    user_object.set_kwh_electricity_total(sqlMessenger.get_user_kwh_electricity_from_db(userObject=user_object))
+    if user_object.get_kwh_electricity_total():
+        return jsonify({'status': 'success', 'kwh_electricity': user_object.get_kwh_electricity_total()})
     else:
         return jsonify({'status': 'failure'})
 
-@app.route('/set_kwh_electricity', methods=['POST'])
+@app.route('/set_kwh_electricity_total', methods=['POST'])
 def set_kwh_electricity_flask():
     user_id = request.form['user_id']
-    kwh_electricity = request.form['kwh_electricity']
+    kwh_electricity = request.form['kwh_electricity_total']
     user_object = User(user_id)
     user_object.set_kwh_electricity_total(kwh_electricity)
     if sqlMessenger.update_user_kwh_electricity(user_object):
@@ -115,17 +111,7 @@ def set_kwh_electricity_flask():
     else:
         return jsonify({'status': 'failure'})
 
-@app.route('/get_total_kwh_gas', methods=['GET'])
-def get_kwh_gas_flask():
-    user_id = request.form['user_id']
-    user_object = User(user_id)
-    user_object.set_kwh_gas(sqlMessenger.get_user_kwh_gas_from_db(userObject=user_object))
-    if user_object.get_kwh_gas():
-        return jsonify({'status': 'success', 'kwh_gas': user_object.get_kwh_gas()})
-    else:
-        return jsonify({'status': 'failure'})
-
-@app.route('/set_kwh_gas', methods=['POST'])
+@app.route('/set_kwh_gas_total', methods=['POST'])
 def set_kwh_gas_flask():
     user_id = request.form['user_id']
     kwh_gas = request.form['kwh_gas']
@@ -133,6 +119,16 @@ def set_kwh_gas_flask():
     user_object.set_kwh_gas(kwh_gas)
     if sqlMessenger.update_user_kwh_gas(user_object):
         return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/get_kwh_gas_total', methods=['GET'])
+def get_kwh_gas_flask():
+    user_id = request.form['user_id']
+    user_object = User(user_id)
+    user_object.set_kwh_gas_total(sqlMessenger.get_user_kwh_gas_from_db(userObject=user_object))
+    if user_object.get_kwh_gas_total():
+        return jsonify({'status': 'success', 'kwh_gas': user_object.get_kwh_gas_total()})
     else:
         return jsonify({'status': 'failure'})
 
@@ -153,6 +149,31 @@ def set_location_flask():
     user_object = User(user_id)
     user_object.set_location(location)
     if sqlMessenger.update_user_location(user_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+ #########################################################################
+
+@app.route('/set_kwh_electricity', methods=['POST'])
+def set_kwh_electricity_flask():
+    user_id = request.form['user_id']
+    kwh_electricity = request.form['kwh_electricity']
+    user_object = User(user_id)
+    user_object.set_kwh_electricity_total(kwh_electricity)
+    if sqlMessenger.update_user_kwh_electricity(user_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+
+@app.route('/set_kwh_gas', methods=['POST'])
+def set_kwh_gas_flask():
+    user_id = request.form['user_id']
+    kwh_gas = request.form['kwh_gas']
+    user_object = User(user_id)
+    user_object.set_kwh_gas(kwh_gas)
+    if sqlMessenger.update_user_kwh_gas(user_object):
         return jsonify({'status': 'success'})
     else:
         return jsonify({'status': 'failure'})
