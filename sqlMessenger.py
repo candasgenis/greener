@@ -36,7 +36,7 @@ def insert_user_to_db(userObject):  # Function for inserting user's information 
             try:
                 cursor.execute("INSERT INTO user_info"
                                "(user_id, carbon_emission, kwh_total, electricity_kwh_total, gas_kwh_total, location) "
-                               "VALUES(%s, %s, %s, %s, %s, %s, %s ,%s, %s, %s)", dump_tuple)
+                               "VALUES(%s, %s, %s, %s, %s, %s)", dump_tuple)
 
                 connection.commit()
                 cursor.close()
@@ -101,7 +101,7 @@ def update_carbon_emission(userObject):  # Function for setting user's carbon em
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE user_info SET carbon_emission = %s WHERE user_id = %s", (
-                userObject.get_carbon_emission(), userObject.get_user_id()))
+                userObject.get_carbon_emission(), userObject.get_user_id(),))
             connection.commit()
             cursor.close()
             connection.close()
@@ -191,7 +191,7 @@ def get_user_kwh_electricity_from_db(userObject):  # Function for getting user's
                                              password='1234')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("SELECT kwh_electricity FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
+            cursor.execute("SELECT kwh_electricity_total FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
             record = cursor.fetchone()
             if record is not None:
                 cursor.close()
