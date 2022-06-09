@@ -28,17 +28,14 @@ def insert_user_to_db(userObject):  # Function for inserting user's information 
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='1234')
         if connection.is_connected():
-            dump_tuple = (userObject.get_user_id(), userObject.find_carbon_emission(),
-                          userObject.get_kwh_total(), userObject.get_kwh_electricity(),
-                          userObject.get_kwh_gas(), userObject.get_location(),
-                          userObject.get_householdType(), userObject.get_numberOfRooms(),
-                          userObject.get_heatingType(), userObject.get_insulation())
+            dump_tuple = (userObject.get_user_id(), userObject.get_carbon_emission(),
+                          userObject.get_kwh_total(), userObject.get_kwh_electricity_total(),
+                          userObject.get_kwh_gas_total(), userObject.get_location())
             print(dump_tuple)
             cursor = connection.cursor()
             try:
                 cursor.execute("INSERT INTO user_info"
-                               "(user_id, carbon_emission, kwh_total, kwh_electricity, kwh_gas, location, house_type,"
-                               "number_of_rooms, heating_type, insulation) "
+                               "(user_id, carbon_emission, kwh_total, electricity_kwh_total, gas_kwh_total, location) "
                                "VALUES(%s, %s, %s, %s, %s, %s, %s ,%s, %s, %s)", dump_tuple)
 
                 connection.commit()
@@ -317,7 +314,7 @@ def get_house_room_number_from_db(houseObject):  # Function for getting user's n
                                              password='##yourpassword##')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("SELECT number_of_rooms FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
+            cursor.execute("SELECT number_of_rooms FROM home WHERE home_id = %s", (houseObject.get_home_id(),))
             record = cursor.fetchone()
             if len(cursor.fetchall()) > 0:
                 cursor.close()
