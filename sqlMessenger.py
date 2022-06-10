@@ -7,7 +7,7 @@ def connect_mysql_server():
         connection = mysql.connector.connect(host='localhost',
                                              database='greenerapp',
                                              user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             db_Info = connection.get_server_info()
             print("Connected to MySQL Server version ", db_Info)
@@ -26,7 +26,7 @@ def connect_mysql_server():
 def insert_user_to_db(userObject):  # Function for inserting user's information to database.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             dump_tuple = (userObject.get_user_id(), userObject.get_carbon_emission(),
                           userObject.get_kwh_total(), userObject.get_kwh_electricity_total(),
@@ -54,7 +54,7 @@ def insert_user_to_db(userObject):  # Function for inserting user's information 
 def get_user_from_db(userObject):  # Function for getting user's information from database.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT * FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
@@ -96,7 +96,7 @@ def get_home_from_db(homeObject):  # Function for getting home's information fro
 def get_carbon_emission_from_db(userObject):  # Function for getting user's carbon emission from database.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT carbon_emission FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
@@ -118,7 +118,7 @@ def get_carbon_emission_from_db(userObject):  # Function for getting user's carb
 def update_carbon_emission(userObject):  # Function for setting user's carbon emission in database.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE user_info SET carbon_emission = %s WHERE user_id = %s", (
@@ -135,7 +135,7 @@ def update_carbon_emission(userObject):  # Function for setting user's carbon em
 def get_house_belong_to_user(user_id):
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT home_id FROM user_home WHERE user_id = %s", (user_id,))
@@ -154,7 +154,7 @@ def get_house_belong_to_user(user_id):
 def get_kwh_total_from_db(user_id):  # Function for getting user's total kwh from database.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT kwh_total FROM user_info WHERE user_id = %s", (user_id,))
@@ -175,7 +175,7 @@ def get_kwh_total_from_db(user_id):  # Function for getting user's total kwh fro
 def update_kwh_total(userObject):  # Function for setting user's total kwh in database.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE user_info SET kwh_total = %s WHERE user_id = %s", (
@@ -191,7 +191,7 @@ def update_kwh_total(userObject):  # Function for setting user's total kwh in da
 def update_user_kwh_electricity(userObject):  # Function for updating user's electricity kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE user_info SET kwh_electricity_total = %s WHERE user_id = %s",
@@ -207,7 +207,7 @@ def update_user_kwh_electricity(userObject):  # Function for updating user's ele
 def update_home_kwh_electricity(homeObject):  # Function for updating user's electricity kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE home SET kwh_electricity = %s WHERE home_id = %s",
@@ -223,7 +223,7 @@ def update_home_kwh_electricity(homeObject):  # Function for updating user's ele
 def update_home_kwh_gas(homeObject):  # Function for updating home's gas kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE home SET kwh_gas = %s WHERE home_id = %s",
@@ -239,7 +239,7 @@ def update_home_kwh_gas(homeObject):  # Function for updating home's gas kwh.
 def update_home_kwh_total(homeObject):  # Function for updating home's total kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE home SET kwh_total = %s WHERE home_id = %s",
@@ -255,7 +255,7 @@ def update_home_kwh_total(homeObject):  # Function for updating home's total kwh
 def update_home_info(homeObject):  # Function for updating home's info.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE home SET home_name = %s, house_type = %s, number_of_rooms = %s, heating_type = %s, "
@@ -274,7 +274,7 @@ def update_home_info(homeObject):  # Function for updating home's info.
 def update_home_house_type(homeObject):  # Function for updating home's house type.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE home SET house_type = %s WHERE home_id = %s",
@@ -290,7 +290,7 @@ def update_home_house_type(homeObject):  # Function for updating home's house ty
 def update_home_number_of_rooms(homeObject):  # Function for updating home's number of rooms.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE home SET number_of_rooms = %s WHERE home_id = %s",
@@ -306,7 +306,7 @@ def update_home_number_of_rooms(homeObject):  # Function for updating home's num
 def update_home_heating_type(homeObject):  # Function for updating home's heating type.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE home SET heating_type = %s WHERE home_id = %s",
@@ -322,7 +322,7 @@ def update_home_heating_type(homeObject):  # Function for updating home's heatin
 def update_home_insulation(homeObject):  # Function for updating home's insulation.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE home SET insulation = %s WHERE home_id = %s",
@@ -338,7 +338,7 @@ def update_home_insulation(homeObject):  # Function for updating home's insulati
 def get_home_kwh_electricity_from_db(homeObject):  # Function for getting home's electricity kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT kwh_electricity FROM home WHERE home_id = %s",
@@ -354,7 +354,7 @@ def get_home_kwh_electricity_from_db(homeObject):  # Function for getting home's
 def get_home_kwh_gas_from_db(homeObject):  # Function for getting home's gas kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT kwh_gas FROM home WHERE home_id = %s",
@@ -370,7 +370,7 @@ def get_home_kwh_gas_from_db(homeObject):  # Function for getting home's gas kwh
 def get_home_kwh_total_from_db(homeObject):  # Function for getting home's total kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT kwh_total FROM home WHERE home_id = %s",
@@ -386,7 +386,7 @@ def get_home_kwh_total_from_db(homeObject):  # Function for getting home's total
 def get_home_house_type_from_db(homeObject):  # Function for getting home's house type.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT house_type FROM home WHERE home_id = %s",
@@ -402,7 +402,7 @@ def get_home_house_type_from_db(homeObject):  # Function for getting home's hous
 def get_home_number_of_rooms_from_db(homeObject):  # Function for getting home's number of rooms.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT number_of_rooms FROM home WHERE home_id = %s",
@@ -418,7 +418,7 @@ def get_home_number_of_rooms_from_db(homeObject):  # Function for getting home's
 def get_home_heating_type_from_db(homeObject):  # Function for getting home's heating type.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT heating_type FROM home WHERE home_id = %s",
@@ -434,7 +434,7 @@ def get_home_heating_type_from_db(homeObject):  # Function for getting home's he
 def get_home_insulation_from_db(homeObject):  # Function for getting home's insulation.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT insulation FROM home WHERE home_id = %s",
@@ -452,7 +452,7 @@ def get_home_insulation_from_db(homeObject):  # Function for getting home's insu
 def get_user_kwh_electricity_from_db(userObject):  # Function for getting user's electricity kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT kwh_electricity FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
@@ -473,7 +473,7 @@ def get_user_kwh_electricity_from_db(userObject):  # Function for getting user's
 def update_user_kwh_gas(userObject):  # Function for updating user's gas kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("UPDATE user_info SET kwh_gas_total = %s WHERE user_id = %s",
@@ -492,7 +492,7 @@ def update_user_kwh_gas(userObject):  # Function for updating user's gas kwh.
 def get_user_kwh_gas_from_db(userObject):  # Function for getting user's gas kwh.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT kwh_gas FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
@@ -512,7 +512,7 @@ def get_user_kwh_gas_from_db(userObject):  # Function for getting user's gas kwh
 def get_user_homes_from_db(userObject):
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
-                                             password='1234')
+                                             password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
             cursor.execute("SELECT home_id FROM user_home WHERE user_id = %s", (userObject.get_user_id(),))
