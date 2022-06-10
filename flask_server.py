@@ -43,15 +43,6 @@ def get_user_info():
     else:
         return jsonify({'status': 'failure'})
 
-@app.route('/get_home_info', methods=['GET'])
-def get_home_info():
-    home_id = request.form['home_id']
-    home_object = household(home_id=home_id)
-    home_info = sqlMessenger.get_home_from_db(homeObject=home_object)
-    if home_info:
-        return jsonify({'status': 'success', 'home_info': home_info})
-    else:
-        return jsonify({'status': 'failure'})
 
 @app.route('/get_carbon_emission', methods=['GET'])
 def get_carbon_emission_flask():
@@ -175,6 +166,36 @@ def get_user_homes_flask():
  #########################################################################
 
 # Home Setters
+@app.route('/set_home_info', methods=['POST'])
+def set_home_info_flask():
+    home_id = request.form['home_id']
+    home_name = request.form['home_name']
+    house_type = request.form['house_type']
+    number_of_rooms = request.form['number_of_rooms']
+    heating_type = request.form['heating_type']
+    insulation = request.form['insulation']
+    kwh_electricity = request.form['kwh_electricity']
+    kwh_gas = request.form['kwh_gas']
+    kwh_total = request.form['kwh_total']
+
+    home_object = household(home_id)
+    home_object.set_home_name(home_name)
+    home_object.set_house_type(house_type)
+    home_object.set_number_of_rooms(number_of_rooms)
+    home_object.set_heating_type(heating_type)
+    home_object.set_insulation(insulation)
+    home_object.set_kwh_electricity(kwh_electricity)
+    home_object.set_kwh_gas(kwh_gas)
+    home_object.set_kwh_total(kwh_total)
+    if sqlMessenger.update_home_info(home_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
+
+
+
+
+
 @app.route('/set_kwh_electricity', methods=['POST'])
 def set_kwh_electricity_flask():
     home_id = request.form['home_id']
@@ -242,7 +263,7 @@ def set_heating_type_flask():
     else:
         return jsonify({'status': 'failure'})
 
-@app.route('/set_insulation', methods=['POST'])  ## set_insulation ı şimdilik sadece insulation yaptık
+@app.route('/set_insulation', methods=['POST'])
 def set_insulation_flask():
     home_id = request.form['home_id']
     insulation = request.form['insulation']
@@ -254,6 +275,16 @@ def set_insulation_flask():
         return jsonify({'status': 'failure'})
 
 # Home Getters
+@app.route('/get_home_info', methods=['GET'])
+def get_home_info():
+    home_id = request.form['home_id']
+    home_object = household(home_id=home_id)
+    home_info = sqlMessenger.get_home_from_db(homeObject=home_object)
+    if home_info:
+        return jsonify({'status': 'success', 'home_info': home_info})
+    else:
+        return jsonify({'status': 'failure'})
+
 @app.route('/get_kwh_electricity', methods=['GET'])
 def get_kwh_electricity_flask():
     home_id = request.form['home_id']

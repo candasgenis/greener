@@ -1,7 +1,8 @@
 class household:
 
-    def __init__(self,home_id,house_type = "Undefined",number_of_rooms = 0.0,heating_type = "Undefined",insulation = "Undefined",kwh_electricity = 0.0,kwh_gas = 0.0,kwh_total = 0.0, carbon_emission=0.0):
+    def __init__(self,home_id,home_name = "Undefined",house_type = "Undefined",number_of_rooms = 0.0,heating_type = "Undefined",insulation = "Undefined",kwh_electricity = 0.0,kwh_gas = 0.0,kwh_total = 0.0, carbon_emission=0.0):
         self.house_type = house_type
+        self.home_name = home_name
         self.number_of_rooms = number_of_rooms
         self.heating_type = heating_type
         self.insulation = insulation
@@ -15,7 +16,10 @@ class household:
 
     def set_carbon_emission(self, carbon_emission):
         self.carbon_emission = carbon_emission
-    
+
+    def set_home_name(self, home_name):
+        self.home_name = home_name
+
     def set_house_type(self, house_type):
         self.house_type = house_type
 
@@ -44,6 +48,9 @@ class household:
 
     def get_carbon_emission(self):
         return self.carbon_emission
+
+    def get_home_name(self):
+        return self.home_name
 
     def get_house_type(self):
         return self.house_type

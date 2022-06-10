@@ -252,6 +252,25 @@ def update_home_kwh_total(homeObject):  # Function for updating home's total kwh
         print("Error while updating home's total kwh", e)
         return False
 
+def update_home_info(homeObject):  # Function for updating home's info.
+    try:
+        connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
+                                             password='1234')
+        if connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute("UPDATE home SET home_name = %s, house_type = %s, number_of_rooms = %s, heating_type = %s, "
+                           "insulation = %s, kwh_electricity = %s, kwh_gas = %s, kwh_total = %s WHERE home_id = %s",
+                           (homeObject.get_home_name(), homeObject.get_house_type(), homeObject.get_number_of_rooms(),
+                            homeObject.get_heating_type(), homeObject.get_insulation(), homeObject.get_kwh_electricity(),
+                            homeObject.get_kwh_gas(), homeObject.get_kwh_total(), homeObject.get_home_id()))
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return True
+    except Error as e:
+        print("Error while updating home's info", e)
+        return False
+
 def update_home_house_type(homeObject):  # Function for updating home's house type.
     try:
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
