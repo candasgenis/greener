@@ -71,6 +71,27 @@ def get_user_from_db(userObject):  # Function for getting user's information fro
     except Error as e:
         print("Error while getting user from database", e)
 
+def get_home_from_db(homeObject):  # Function for getting home's information from database.
+    try:
+        connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
+                                             password='Pythondev1.')
+        if connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM home WHERE home_id = %s", (homeObject.get_home_id(),))
+            record = cursor.fetchone()
+            if record is not None:
+                cursor.close()
+                connection.close()
+                return record
+            else:
+                cursor.close()
+                connection.close()
+                return False
+    except Error as e:
+        print("Error while getting home from database", e)
+        return False
+
+
 
 def get_carbon_emission_from_db(userObject):  # Function for getting user's carbon emission from database.
     try:

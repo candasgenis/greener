@@ -38,9 +38,18 @@ def get_user_info():
     user_id = request.form['user_id']
     user_object = User(user_id)
     user_info = sqlMessenger.get_user_from_db(userObject=user_object)
-    print(user_info)
     if user_info:
         return jsonify({'status': 'success', 'user_info': user_info})
+    else:
+        return jsonify({'status': 'failure'})
+
+@app.route('/get_home_info', methods=['GET'])
+def get_home_info():
+    home_id = request.form['home_id']
+    home_object = household(home_id=home_id)
+    home_info = sqlMessenger.get_home_from_db(homeObject=home_object)
+    if home_info:
+        return jsonify({'status': 'success', 'home_info': home_info})
     else:
         return jsonify({'status': 'failure'})
 
@@ -69,7 +78,7 @@ def set_carbon_emission_flask():
         return jsonify({'status': 'failure'})
 
 @app.route('/get_kwh_total', methods=['GET'])
-def get_kwh_total_flask():
+def get_kwh_total_user_flask():
     user_id = request.form['user_id']
     user_object = User(user_id)
     user_object.set_kwh_total(sqlMessenger.get_kwh_total_from_db(user_id))
@@ -153,7 +162,7 @@ def set_location_flask():
     else:
         return jsonify({'status': 'failure'})
 
-@app.route('get_user_homes', methods=['GET'])
+@app.route('/get_user_homes', methods=['GET'])
 def get_user_homes_flask():
     user_id = request.form['user_id']
     user_object = User(user_id)
@@ -177,7 +186,7 @@ def set_kwh_electricity_flask():
     else:
         return jsonify({'status': 'failure'})
 
-@app.route('set_kwh_gas', methods=['POST'])
+@app.route('/set_kwh_gas', methods=['POST'])
 def set_kwh_gas_flask():
     home_id = request.form['home_id']
     kwh_gas = request.form['kwh_gas']
@@ -211,7 +220,7 @@ def set_house_type_flask():
     else:
         return jsonify({'status': 'failure'})
 
-@app.route('set_number_of_rooms', methods=['POST'])
+@app.route('/set_number_of_rooms', methods=['POST'])
 def set_number_of_rooms_flask():
     home_id = request.form['home_id']
     number_of_rooms = request.form['number_of_rooms']
@@ -233,7 +242,7 @@ def set_heating_type_flask():
     else:
         return jsonify({'status': 'failure'})
 
-@app.route('/set_insulation', methods=['POST'])
+@app.route('/set_insulation', methods=['POST'])  ## set_insulation ı şimdilik sadece insulation yaptık
 def set_insulation_flask():
     home_id = request.form['home_id']
     insulation = request.form['insulation']
@@ -410,6 +419,6 @@ def set_insulation_flask():
 
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
 
