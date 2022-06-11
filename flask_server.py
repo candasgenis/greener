@@ -1,10 +1,11 @@
 from flask import Flask, jsonify, request, session
 import yaml
-
+import math
 import calculations
 import sqlMessenger
 from user import User
 from household import household
+import json
 
 #db = yaml.safe_load(open('../src/db.yaml'))
 app = Flask(__name__)
@@ -12,12 +13,23 @@ app = Flask(__name__)
 
 @app.route('/set_user_info', methods=['POST'])
 def set_user_info():
+    print("set_user_info request received")
     user_id = request.form['user_id']
+    print("user_id geçti")
     kwh_electricity_total = request.form['kwh_electricity_total']
+    print("kwh_electricity_total geçti")
     kwh_gas_total = request.form['kwh_gas_total']
+    print("kwh_gas_total geçti")
     location = request.form['location']
+    print("location geçti")
+    print("request form homes a geldi")
+    homes = json.loads(request.form['homes'])
+    print("homes geldi")
+    name = request.form['name']
+    print("name geldi")
 
     user_object = User(user_id)
+    user_object.set_name(name)
     user_object.set_kwh_electricity_total(kwh_electricity_total)
     user_object.set_kwh_gas_total(kwh_gas_total)
     user_object.set_location(location)
@@ -27,8 +39,12 @@ def set_user_info():
                                                   kwh_gas=user_object.get_kwh_gas_total())
 
     user_object.set_carbon_emission(calculation_object.calculate_co2_overall())
-
-    if sqlMessenger.insert_user_to_db(user_object):
+    print("carbon_emission: ")
+    print(user_object.get_carbon_emission())
+    user_object.set_user_homes(homes)
+    print('HOMES')
+    print(homes)
+    if sqlMessenger.insert_user_to_db(user_object) and sqlMessenger.insert_user_home_info_to_db(user_object):
         return jsonify({'status': 'success'})
     else:
         return jsonify({'status': 'failure'})
@@ -176,7 +192,6 @@ def set_home_info_flask():
     insulation = request.form['insulation']
     kwh_electricity = request.form['kwh_electricity']
     kwh_gas = request.form['kwh_gas']
-    kwh_total = request.form['kwh_total']
 
     home_object = household(home_id)
     home_object.set_home_name(home_name)
@@ -186,14 +201,23 @@ def set_home_info_flask():
     home_object.set_insulation(insulation)
     home_object.set_kwh_electricity(kwh_electricity)
     home_object.set_kwh_gas(kwh_gas)
-    home_object.set_kwh_total(kwh_total)
+    home_object.set_kwh_total(float(kwh_electricity) + float(kwh_gas))
     if sqlMessenger.update_home_info(home_object):
         return jsonify({'status': 'success'})
     else:
         return jsonify({'status': 'failure'})
 
 
-
+@app.route('/set_home_name', methods=['POST'])
+def set_home_name_flask():
+    home_id = request.form['home_id']
+    home_name = request.form['home_name']
+    home_object = household(home_id)
+    home_object.set_home_name(home_name)
+    if sqlMessenger.update_home_name(home_object):
+        return jsonify({'status': 'success'})
+    else:
+        return jsonify({'status': 'failure'})
 
 
 @app.route('/set_kwh_electricity', methods=['POST'])
@@ -355,87 +379,6 @@ def get_insulation_flask():
     else:
         return jsonify({'status': 'failure'})
 
-"""@app.route('/get_house_type', methods=['GET'])
-def get_house_type_flask():
-    user_id = request.form['user_id']
-    user_object = User(user_id)
-    user_object.set_householdType(sqlMessenger.get_user_house_type_from_db(userObject=user_object))
-    if user_object.get_householdType():
-        return jsonify({'status': 'success', 'house_type': user_object.get_householdType()})
-    else:
-        return jsonify({'status': 'failure'})"""
-
-"""@app.route('/set_house_type', methods=['POST'])
-def set_house_type_flask():
-    house_id = request.form['house_id']
-    house_type = request.form['house_type']
-    if sqlMessenger.update_house_type(house_id=house_id, house_type=house_type):
-        return jsonify({'status': 'success'})
-    else:
-        return jsonify({'status': 'failure'})"""
-
-"""@app.route('/get_number_of_rooms', methods=['GET'])
-def get_number_of_rooms_flask():
-    user_id = request.form['user_id']
-    household_object = User(user_id)
-    household_object.set_number_of_rooms(sqlMessenger.get_user_room_number_from_db(houseObject=household_object))
-    if household_object.get_numberOfRooms():
-        return jsonify({'status': 'success', 'number_of_rooms': household_object.get_numberOfRooms()})
-    else:
-        return jsonify({'status': 'failure'})"""
-
-"""@app.route('/set_number_of_rooms', methods=['POST'])
-def set_number_of_rooms_flask():
-    house_id = request.form['house_id']
-    number_of_rooms = request.form['number_of_rooms']
-    household_object = household(house_id)
-    household_object.set_numberOfRooms(number_of_rooms)
-    if sqlMessenger.update_house_room_number(household_object):
-        return jsonify({'status': 'success'})
-    else:
-        return jsonify({'status': 'failure'})
-
-@app.route('/get_heating_type', methods=['GET'])
-def get_heating_type_flask():
-    house_id = request.form['house_id']
-    household_object = household(house_id)
-    household_object.set_heating_type(sqlMessenger.get_user_heating_type_from_db(houseObject=household_object))
-    if household_object.set_heating_type():
-        return jsonify({'status': 'success', 'heating_type': household_object.get_heating_type()})
-    else:
-        return jsonify({'status': 'failure'})
-
-@app.route('/set_heating_type', methods=['POST'])
-def set_heating_type_flask():
-    home_id = request.form['home_id']
-    heating_type = request.form['heating_type']
-    house_object = household(home_id)
-    house_object.set_heatingType(heating_type)
-    if sqlMessenger.update_user_heating_type(house_object.get_user_id(), house_object.get_heatingType()):
-        return jsonify({'status': 'success'})
-    else:
-        return jsonify({'status': 'failure'})
-
-@app.route('/get_insulation', methods=['GET'])
-def get_insulation_flask():
-    house_id = request.form['user_id']
-    house_object = household(house_id)
-    house_object.set_insulation(sqlMessenger.get_user_insulation_from_db(userObject=house_object))
-    if house_object.get_insulation():
-        return jsonify({'status': 'success', 'insulation': house_object.get_insulation()})
-    else:
-        return jsonify({'status': 'failure'})
-
-@app.route('/set_insulation', methods=['POST'])
-def set_insulation_flask():
-    house_id = request.form['user_id']
-    insulation = request.form['insulation']
-    house_object = household(house_id)
-    house_object.set_insulation(insulation)
-    if sqlMessenger.update_insulation(house_object):
-        return jsonify({'status': 'success'})
-    else:
-        return jsonify({'status': 'failure'})"""
 
 
 

@@ -3,8 +3,9 @@ from calculations import calculation
 
 class User:
 
-    def __init__(self, user_id=None, carbon_emission=None, kwh_total=None,location=None, kwh_electricity_total=None, kwh_gas_total=None, homes=None):
+    def __init__(self, user_id=None, name=None, carbon_emission=None, kwh_total=None,location=None, kwh_electricity_total=None, kwh_gas_total=None, homes=None):
         self.user_id = user_id
+        self.name = name
         self.carbon_emission = carbon_emission
         self.kwh_total = kwh_total
         self.location = location
@@ -25,6 +26,9 @@ class User:
 
     def set_user_id(self, user_id):
         self.user_id = user_id
+
+    def set_name(self, name):
+        self.name = name
 
     def set_kwh_total(self, kwh_total):
         self.kwh_total = kwh_total
@@ -47,6 +51,9 @@ class User:
 
     def get_user_id(self):
         return self.user_id
+
+    def get_name(self):
+        return self.name
 
     def get_kwh_total(self):
         return self.kwh_total

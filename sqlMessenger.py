@@ -28,15 +28,18 @@ def insert_user_to_db(userObject):  # Function for inserting user's information 
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='Pythondev1.')
         if connection.is_connected():
-            dump_tuple = (userObject.get_user_id(), userObject.get_carbon_emission(),
+            dump_tuple = (userObject.get_user_id(), userObject.get_name(), userObject.get_carbon_emission(),
                           userObject.get_kwh_total(), userObject.get_kwh_electricity_total(),
                           userObject.get_kwh_gas_total(), userObject.get_location())
+            print("insert user to db dump tuple ı")
             print(dump_tuple)
+            print("carbon emission insert user to db")
+            print(userObject.get_carbon_emission())
             cursor = connection.cursor()
             try:
                 cursor.execute("INSERT INTO user_info"
-                               "(user_id, carbon_emission, kwh_total, electricity_kwh_total, gas_kwh_total, location) "
-                               "VALUES(%s, %s, %s, %s, %s, %s, %s ,%s, %s, %s)", dump_tuple)
+                               "(user_id, name, carbon_emission_total, kwh_total, electricity_kwh_total, gas_kwh_total, location) "
+                               "VALUES(%s, %s, %s, %s, %s, %s, %s)", dump_tuple)
 
                 connection.commit()
                 cursor.close()
@@ -50,6 +53,39 @@ def insert_user_to_db(userObject):  # Function for inserting user's information 
     except Error as e:
         print("Error while inserting user to database", e)
 
+def insert_user_home_info_to_db(userObject):  # Function for inserting user's home information to database.
+    print("insert user home info to db")
+    try:
+        connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
+                                             password='Pythondev1.')
+        if connection.is_connected():
+            homes = userObject.get_user_homes()
+            print("insert user home info to db homes")
+            print(homes)
+            for home_id in homes:
+                dump_tuple = (userObject.get_user_id(), home_id)
+                print("insert user home info to db dump tuple ı")
+                print(dump_tuple)
+                cursor = connection.cursor()
+                try:
+                    cursor.execute("INSERT INTO user_home"
+                                   "(user_id, home_id) "
+                                   "VALUES(%s, %s)", dump_tuple)
+
+                    connection.commit()
+
+
+                except Error as e:
+                    print("Error while inserting data into MySQL", e)
+                    cursor.close()
+                    connection.close()
+                    return False
+                cursor.close()
+            connection.close()
+            return True
+    except Error as e:
+        print("Error while inserting user's homes to database", e)
+        return False
 
 def get_user_from_db(userObject):  # Function for getting user's information from database.
     try:
@@ -99,13 +135,14 @@ def get_carbon_emission_from_db(userObject):  # Function for getting user's carb
                                              password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("SELECT carbon_emission FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
+            cursor.execute("SELECT carbon_emission_total FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
             record = cursor.fetchone()
-            print(record)
+            print(record[0])
+            print(type(record[0]))
             if record is not None:
                 cursor.close()
                 connection.close()
-                return record
+                return record[0]
             else:
                 cursor.close()
                 connection.close()
@@ -258,17 +295,37 @@ def update_home_info(homeObject):  # Function for updating home's info.
                                              password='Pythondev1.')
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("UPDATE home SET home_name = %s, house_type = %s, number_of_rooms = %s, heating_type = %s, "
-                           "insulation = %s, kwh_electricity = %s, kwh_gas = %s, kwh_total = %s WHERE home_id = %s",
-                           (homeObject.get_home_name(), homeObject.get_house_type(), homeObject.get_number_of_rooms(),
+            cursor.execute("INSERT INTO home (home_id,home_name,house_type,number_of_rooms,heating_type,insulation,kwh_electricity,kwh_gas,kwh_total)"
+                           " VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE home_name = %s,house_type = %s,number_of_rooms = %s,"
+                           "heating_type = %s,insulation = %s,kwh_electricity = %s,kwh_gas = %s,kwh_total = %s",
+                           (homeObject.get_home_id(), homeObject.get_home_name(), homeObject.get_house_type(),
+                            homeObject.get_number_of_rooms(), homeObject.get_heating_type(), homeObject.get_insulation(),
+                            homeObject.get_kwh_electricity(), homeObject.get_kwh_gas(), homeObject.get_kwh_total(),
+                            homeObject.get_home_name(), homeObject.get_house_type(), homeObject.get_number_of_rooms(),
                             homeObject.get_heating_type(), homeObject.get_insulation(), homeObject.get_kwh_electricity(),
-                            homeObject.get_kwh_gas(), homeObject.get_kwh_total(), homeObject.get_home_id()))
+                            homeObject.get_kwh_gas(), homeObject.get_kwh_total()))
             connection.commit()
             cursor.close()
             connection.close()
             return True
     except Error as e:
         print("Error while updating home's info", e)
+        return False
+
+def update_home_name(homeObject):  # Function for updating home's name.
+    try:
+        connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
+                                             password='Pythondev1.')
+        if connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute("UPDATE home SET home_name = %s WHERE home_id = %s",
+                           (homeObject.get_home_name(), homeObject.get_home_id()))
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return True
+    except Error as e:
+        print("Error while updating home's name", e)
         return False
 
 def update_home_house_type(homeObject):  # Function for updating home's house type.
@@ -333,6 +390,22 @@ def update_home_insulation(homeObject):  # Function for updating home's insulati
             return True
     except Error as e:
         print("Error while updating home's insulation", e)
+        return False
+
+def get_home_name(homeObject):  # Function for getting home's name.
+    try:
+        connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
+                                             password='Pythondev1.')
+        if connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute("SELECT home_name FROM home WHERE home_id = %s", (homeObject.get_home_id(),))
+            connection.commit()
+            home_name = cursor.fetchone()
+            cursor.close()
+            connection.close()
+            return home_name
+    except Error as e:
+        print("Error while getting home's name", e)
         return False
 
 def get_home_kwh_electricity_from_db(homeObject):  # Function for getting home's electricity kwh.
