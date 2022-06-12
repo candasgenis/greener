@@ -92,7 +92,7 @@ def get_user_from_db(userObject):  # Function for getting user's information fro
         connection = mysql.connector.connect(host='localhost', database='greenerapp', user='root',
                                              password='Pythondev1.')
         if connection.is_connected():
-            cursor = connection.cursor()
+            cursor = connection.cursor(dictionary=True)
             cursor.execute("SELECT * FROM user_info WHERE user_id = %s", (userObject.get_user_id(),))
             record = cursor.fetchone()
             print(record)
