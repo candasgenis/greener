@@ -13,20 +13,13 @@ app = Flask(__name__)
 
 @app.route('/set_user_info', methods=['POST'])
 def set_user_info():
-    print("set_user_info request received")
     user_id = request.form['user_id']
-    print("user_id geçti")
     kwh_electricity_total = request.form['kwh_electricity_total']
-    print("kwh_electricity_total geçti")
     kwh_gas_total = request.form['kwh_gas_total']
-    print("kwh_gas_total geçti")
     location = request.form['location']
-    print("location geçti")
-    print("request form homes a geldi")
     homes = json.loads(request.form['homes'])
-    print("homes geldi")
     name = request.form['name']
-    print("name geldi")
+
 
     user_object = User(user_id)
     user_object.set_name(name)
