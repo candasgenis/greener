@@ -42,7 +42,7 @@ def set_user_info():
     print("carbon_emission: ")
     print(user_object.get_carbon_emission())
     user_object.set_user_homes(homes)
-    print('HOMES')
+    print('HOMES set_user_info')
     print(homes)
     if sqlMessenger.insert_user_to_db(user_object) and sqlMessenger.insert_user_home_info_to_db(user_object):
         return jsonify({'status': 'success'})
@@ -132,7 +132,7 @@ def set_kwh_gas_total_flask():
     user_id = request.form['user_id']
     kwh_gas = request.form['kwh_gas']
     user_object = User(user_id)
-    user_object.set_kwh_gas(kwh_gas)
+    user_object.set_kwh_gas_total(kwh_gas)
     if sqlMessenger.update_user_kwh_gas(user_object):
         return jsonify({'status': 'success'})
     else:
@@ -173,9 +173,9 @@ def set_location_flask():
 def get_user_homes_flask():
     user_id = request.form['user_id']
     user_object = User(user_id)
-    user_object.set_homes(sqlMessenger.get_user_homes_from_db(userObject=user_object))
-    if user_object.get_homes():
-        return jsonify({'status': 'success', 'homes': user_object.get_homes()})
+    user_object.set_user_homes(sqlMessenger.get_user_homes_from_db(userObject=user_object))
+    if user_object.get_user_homes():
+        return jsonify({'status': 'success', 'homes': user_object.get_user_homes()})
     else:
         return jsonify({'status': 'failure'})
 
