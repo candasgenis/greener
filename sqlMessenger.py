@@ -593,6 +593,7 @@ def get_user_homes_from_db(userObject):
             if record is not None:
                 cursor.close()
                 connection.close()
+                print("get_user_homes_from_db: ", record)
                 return record
             else:
                 cursor.close()

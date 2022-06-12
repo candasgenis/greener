@@ -26,7 +26,7 @@ def set_user_info():
     user_object.set_kwh_electricity_total(kwh_electricity_total)
     user_object.set_kwh_gas_total(kwh_gas_total)
     user_object.set_location(location)
-    user_object.set_kwh_total(int(user_object.get_kwh_electricity_total()) + int(user_object.get_kwh_gas_total()))
+    user_object.set_kwh_total(float(user_object.get_kwh_electricity_total()) + float(user_object.get_kwh_gas_total()))
 
     calculation_object = calculations.calculation(kwh_electricity=user_object.get_kwh_electricity_total(),
                                                   kwh_gas=user_object.get_kwh_gas_total())
@@ -47,6 +47,15 @@ def get_user_info():
     user_id = request.form['user_id']
     user_object = User(user_id)
     user_info = sqlMessenger.get_user_from_db(userObject=user_object)
+    user_homes = sqlMessenger.get_user_homes_from_db(userObject=user_object)
+    user_info['homes'] = []
+    print(type(user_homes))
+    for user_home in user_homes[0]:
+            print(user_home)
+            user_info['homes'].append(user_home)
+
+
+    print(user_info)
     if user_info:
         return jsonify({'status': 'success', 'user_info': user_info})
     else:
